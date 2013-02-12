@@ -102,6 +102,8 @@
 - (void)requestToPutFunctionWithString:(NSString *)put
 {
 	self.HTTPStatusCode = 0;
+	if (![self checkInternetConnection]) return;
+	[self incrementInternetActivitiesCount];
 	
 	NSData *putData = [put dataUsingEncoding:self.dataEncoding allowLossyConversion:YES];
 	
