@@ -9,6 +9,7 @@
 #import "MGServerExchange.h"
 #import "JSONKit.h"
 #import "Reachability.h"
+#import "MGAppDelegate.h"
 
 @interface MGServerExchange (Private)
 - (BOOL)checkInternetConnection;
@@ -52,6 +53,21 @@
 	return YES;
 }
 
+- (NSString *)serverAddress
+{
+	return @"";
+}
+
+- (NSString *)login
+{
+	return @"";
+}
+
+- (NSString *)password
+{
+	return @"";
+}
+
 - (BOOL)debugMode
 {
 	return NO;
@@ -69,7 +85,7 @@
 
 - (NSString *)URLString
 {
-	return self.functionPath;
+	return [NSString stringWithFormat:@"%@%@", self.serverAddress, self.functionPath];
 }
 
 - (NSStringEncoding)dataEncoding
@@ -175,26 +191,28 @@
 
 - (void)incrementInternetActivitiesCount
 {
-	id appDelegate = [[UIApplication sharedApplication] delegate];
-	if ([appDelegate respondsToSelector:@selector(setInternetActivitiesCount:)]) {
-		int activitiesCount = [[appDelegate performSelector:@selector(setInternetActivitiesCount:)] intValue];
-		[appDelegate performSelector:@selector(setInternetActivitiesCount:)
-						  withObject:[NSNumber numberWithInt:activitiesCount + 1]];
+	if ([[UIApplication sharedApplication].delegate isKindOfClass:[MGAppDelegate class]]) {
+		MGAppDelegate *appDelegate = (MGAppDelegate *) [UIApplication sharedApplication].delegate;
+		appDelegate.internetActivitiesCount++;
 	}
 }
 
 - (void)decrementInternetActivitiesCount
 {
-	id appDelegate = [[UIApplication sharedApplication] delegate];
-	if ([appDelegate respondsToSelector:@selector(setInternetActivitiesCount:)]) {
-		int activitiesCount = [[appDelegate performSelector:@selector(setInternetActivitiesCount:)] intValue];
-		[appDelegate performSelector:@selector(setInternetActivitiesCount:)
-						  withObject:[NSNumber numberWithInt:activitiesCount - 1]];
+	if ([[UIApplication sharedApplication].delegate isKindOfClass:[MGAppDelegate class]]) {
+		MGAppDelegate *appDelegate = (MGAppDelegate *) [UIApplication sharedApplication].delegate;
+		appDelegate.internetActivitiesCount--;
 	}
 }
 
+
 #pragma mark - Connection delegate
 
+- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
+{
+	NSURLCredential *credential = [[NSURLCredential alloc] initWithUser:self.login password:self.password persistence:NSURLCredentialPersistenceNone];
+	[[challenge sender] useCredential:credential forAuthenticationChallenge:challenge];
+}
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {

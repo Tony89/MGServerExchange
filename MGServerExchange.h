@@ -25,18 +25,25 @@
 
 
 - (id)initWithDelegate:(id <MGServerExchangeDelegate>)initDelegate;
+
 - (BOOL)parseResponseData;
 - (BOOL)parseResult;
+
 - (void)requestToPostFunctionWithString:(NSString *)post timeoutInterval:(NSTimeInterval)interval;
 - (void)requestToPostFunctionWithString:(NSString *)post;
 - (void)requestToPutFunctionWithString:(NSString *)put;
 - (void)requestToGetFunctionWithString:(NSString *)get;
 - (void)setHeadersForHTTPRequest:(NSMutableURLRequest *)request;
 - (void)requestToDeleteFunction;
+
 - (NSURL *)URL;
 - (NSString *)URLString;
-- (BOOL)debugMode;
 + (BOOL)isInternetReachable;
+
+- (BOOL)debugMode;
 - (NSStringEncoding)dataEncoding;
+- (NSString *)login;
+- (NSString *)password;
+- (NSString *)serverAddress;
 
 @end

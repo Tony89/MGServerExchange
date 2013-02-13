@@ -12,7 +12,7 @@
 
 @protocol MGServerExchangeDelegate <NSObject>
 
-- (void)serverExchange:(MGServerExchange *)serverExchange didParseResult:(NSDictionary *)result;
-- (void)serverExchange:(MGServerExchange *)serverExchange didFailWithError:(NSString *)error;
+- (void)serverExchange:(id)serverExchange didParseResult:(id)result;
+- (void)serverExchange:(id)serverExchange didFailWithError:(NSString *)error;
 
 @end
