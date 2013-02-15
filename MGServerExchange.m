@@ -224,7 +224,7 @@
 {	
 	[self decrementInternetActivitiesCount];
 	if (![self parseResponseData]) {
-		responseData = nil;
+		responseData = [NSMutableData data];
 		[delegate serverExchange:self didFailWithError:errorDescription];
 		return;
 	}
@@ -234,7 +234,7 @@
 	} else {
 		[delegate serverExchange:self didParseResult:result];
 	}
-	responseData = nil;
+	responseData = [NSMutableData data];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
