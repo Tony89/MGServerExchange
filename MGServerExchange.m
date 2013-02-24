@@ -13,8 +13,6 @@
 
 @interface MGServerExchange (Private)
 - (BOOL)checkInternetConnection;
-- (void)incrementInternetActivitiesCount;
-- (void)decrementInternetActivitiesCount;
 @end
 
 
@@ -210,8 +208,19 @@
 
 - (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
-	NSURLCredential *credential = [[NSURLCredential alloc] initWithUser:self.login password:self.password persistence:NSURLCredentialPersistenceNone];
-	[[challenge sender] useCredential:credential forAuthenticationChallenge:challenge];
+	if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
+		[challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge];
+		[challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
+		
+	} else {
+		if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodHTTPBasic] && challenge.previousFailureCount < 2) {
+			NSURLCredential *credentials = [[NSURLCredential alloc] initWithUser:self.login password:self.password persistence:NSURLCredentialPersistenceForSession];
+			[[challenge sender] useCredential:credentials forAuthenticationChallenge:challenge];
+			
+		} else {
+			[[challenge sender] cancelAuthenticationChallenge:challenge];			
+		}
+	}
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
