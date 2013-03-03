@@ -142,7 +142,7 @@
 	}
 	NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
 	[request setURL:[NSURL URLWithString:[fullURL stringByAddingPercentEscapesUsingEncoding:self.dataEncoding]]];
-	[request setHTTPMethod:@"GET"];
+	[request setHTTPMethod:@"GET"];	
 	[self setHeadersForHTTPRequest:request];
 	request.timeoutInterval = 120;
 	[NSURLConnection connectionWithRequest:request delegate:self];
@@ -174,6 +174,7 @@
 
 - (void)setHeadersForHTTPRequest:(NSMutableURLRequest *)request
 {
+	request.cachePolicy = NSURLCredentialPersistenceNone;
 }
 
 - (BOOL)checkInternetConnection
@@ -214,7 +215,7 @@
 		
 	} else {
 		if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodHTTPBasic] && challenge.previousFailureCount < 2) {
-			NSURLCredential *credentials = [[NSURLCredential alloc] initWithUser:self.login password:self.password persistence:NSURLCredentialPersistenceForSession];
+			NSURLCredential *credentials = [[NSURLCredential alloc] initWithUser:self.login password:self.password persistence:NSURLCredentialPersistenceNone];
 			[[challenge sender] useCredential:credentials forAuthenticationChallenge:challenge];
 			
 		} else {

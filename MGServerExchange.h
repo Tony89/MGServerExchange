@@ -32,7 +32,6 @@
 - (void)incrementInternetActivitiesCount;
 - (void)decrementInternetActivitiesCount;
 
-
 - (void)requestToPostFunctionWithString:(NSString *)post timeoutInterval:(NSTimeInterval)interval;
 - (void)requestToPostFunctionWithString:(NSString *)post;
 - (void)requestToPutFunctionWithString:(NSString *)put;
